@@ -23,5 +23,4 @@ class HomePageResponse(BaseModel):
     banners: list[BannerResponse]
     categories: list[CategoryResponse]
     featured_categories: list[CategoryResponse]
-    trending_products: list[ProductSummaryResponse]
     recently_viewed_products: list[ProductSummaryResponse]

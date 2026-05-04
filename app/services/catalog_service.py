@@ -19,32 +19,14 @@ class CatalogService:
         banners = await self.get_promotional_banners()
         categories = await self.category_service.get_active_categories()
         featured_categories = await self.category_service.get_featured_categories()
-        trending_products = await self.get_trending_products()
         recently_viewed = await self.get_recently_viewed_products(recently_viewed_ids or [])
 
         return HomePageResponse(
             banners=banners,
             categories=categories,
             featured_categories=featured_categories,
-            trending_products=trending_products,
             recently_viewed_products=recently_viewed,
         )
-
-    async def get_trending_products(self, limit: int = 10) -> list[ProductSummaryResponse]:
-        result = await self.db.execute(
-            select(Product)
-            .order_by(Product.id.desc())
-            .limit(limit)
-        )
-        products = result.scalars().all()
-        return [
-            ProductSummaryResponse(
-                id=product.id,
-                category_id=product.category_id,
-                name=product.name,
-            )
-            for product in products
-        ]
 
     async def get_recently_viewed_products(self, product_ids: list[uuid.UUID]) -> list[ProductSummaryResponse]:
         if not product_ids:
