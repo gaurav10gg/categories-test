@@ -19,7 +19,6 @@ class CategoryService:
             is_active=payload.is_active,
             is_featured=payload.is_featured,
             sort_order=payload.sort_order,
-            tenant_id=uuid.uuid4(),
         )
         self.db.add(category)
         await self.db.commit()
