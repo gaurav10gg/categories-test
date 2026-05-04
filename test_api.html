@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catalog API Tester</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5c677d;
+      --line: #d9e0ef;
+      --primary: #0f766e;
+      --primary-strong: #0d5f59;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: linear-gradient(160deg, #f7fafc 0%, #eef4ff 100%);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 1100px;
+      margin: 28px auto;
+      padding: 0 16px;
+    }
+    .title {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+    .sub {
+      margin: 0 0 20px;
+      color: var(--muted);
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 24px rgba(18, 34, 64, 0.06);
+    }
+    h2 { margin: 0 0 12px; font-size: 20px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+    label {
+      display: block;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    input, textarea, button {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      font-size: 14px;
+      font-family: inherit;
+    }
+    textarea {
+      min-height: 120px;
+      resize: vertical;
+      font-family: Consolas, monospace;
+    }
+    button {
+      background: var(--primary);
+      border: 0;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: var(--primary-strong); }
+    .endpoint {
+      border: 1px dashed var(--line);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .method {
+      font-size: 12px;
+      color: var(--primary-strong);
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    pre {
+      margin: 12px 0 0;
+      background: #111827;
+      color: #e5e7eb;
+      border-radius: 10px;
+      padding: 12px;
+      overflow: auto;
+      min-height: 220px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1 class="title">Catalog API Tester</h1>
+    <p class="sub">Clean test page for Admin Categories, Public Categories, and Catalog APIs.</p>
+
+    <div class="card">
+      <div class="grid">
+        <div>
+          <label for="baseUrl">Base URL</label>
+          <input id="baseUrl" value="http://127.0.0.1:8000" />
+        </div>
+        <div>
+          <label for="categoryId">Category ID (for update/status/sort)</label>
+          <input id="categoryId" placeholder="uuid" />
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Admin Category APIs</h2>
+      <div class="grid">
+        <div class="endpoint">
+          <div class="method">POST /admin/categories</div>
+          <label for="createPayload">Body</label>
+          <textarea id="createPayload">{
+  "name": "Electronics",
+  "image_url": "https://example.com/cat.png",
+  "is_active": true,
+  "is_featured": false,
+  "sort_order": 1
+}</textarea>
+          <button onclick="callApi('POST','/admin/categories','createPayload')">Create Category</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">PATCH /admin/categories/{category_id}</div>
+          <label for="updatePayload">Body</label>
+          <textarea id="updatePayload">{
+  "name": "Updated Category",
+  "image_url": "https://example.com/updated.png",
+  "is_featured": true
+}</textarea>
+          <button onclick="callApiWithId('PATCH','/admin/categories/{id}','updatePayload')">Update Category</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">PATCH /admin/categories/{category_id}/status</div>
+          <label for="statusPayload">Body</label>
+          <textarea id="statusPayload">{
+  "is_active": true
+}</textarea>
+          <button onclick="callApiWithId('PATCH','/admin/categories/{id}/status','statusPayload')">Update Status</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">PATCH /admin/categories/{category_id}/sort-order</div>
+          <label for="sortPayload">Body</label>
+          <textarea id="sortPayload">{
+  "sort_order": 5
+}</textarea>
+          <button onclick="callApiWithId('PATCH','/admin/categories/{id}/sort-order','sortPayload')">Update Sort Order</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Public Category APIs</h2>
+      <div class="grid">
+        <div class="endpoint">
+          <div class="method">GET /categories</div>
+          <button onclick="callApi('GET','/categories')">Get Active Categories</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">GET /categories/featured</div>
+          <button onclick="callApi('GET','/categories/featured')">Get Featured Categories</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">GET /categories/dropdown</div>
+          <button onclick="callApi('GET','/categories/dropdown')">Get Dropdown Categories</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Catalog APIs</h2>
+      <div class="grid">
+        <div class="endpoint">
+          <div class="method">GET /catalog/home</div>
+          <button onclick="callApi('GET','/catalog/home')">Get Homepage</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">GET /catalog/trending-products?limit=10</div>
+          <button onclick="callApi('GET','/catalog/trending-products?limit=10')">Get Trending</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">GET /catalog/recently-viewed-products?product_ids=...</div>
+          <button onclick="callApi('GET','/catalog/recently-viewed-products')">Get Recently Viewed</button>
+        </div>
+        <div class="endpoint">
+          <div class="method">GET /catalog/promotional-banners?limit=10</div>
+          <button onclick="callApi('GET','/catalog/promotional-banners?limit=10')">Get Banners</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Response</h2>
+      <pre id="result">{}</pre>
+    </div>
+  </div>
+
+  <script>
+    function getBaseUrl() {
+      return document.getElementById("baseUrl").value.trim().replace(/\/+$/, "");
+    }
+
+    function writeResult(payload) {
+      document.getElementById("result").textContent = JSON.stringify(payload, null, 2);
+    }
+
+    async function callApi(method, path, payloadId) {
+      const url = `${getBaseUrl()}${path}`;
+      const options = { method, headers: { "Content-Type": "application/json" } };
+
+      if (payloadId) {
+        try {
+          options.body = JSON.stringify(JSON.parse(document.getElementById(payloadId).value));
+        } catch (e) {
+          writeResult({ error: "Invalid JSON body", details: String(e) });
+          return;
+        }
+      }
+
+      try {
+        const res = await fetch(url, options);
+        const text = await res.text();
+        let data;
+        try {
+          data = text ? JSON.parse(text) : {};
+        } catch {
+          data = { raw: text };
+        }
+        writeResult({ status: res.status, ok: res.ok, url, data });
+      } catch (error) {
+        writeResult({ error: "Request failed", details: String(error), url });
+      }
+    }
+
+    function callApiWithId(method, pathTemplate, payloadId) {
+      const id = document.getElementById("categoryId").value.trim();
+      if (!id) {
+        writeResult({ error: "Please provide Category ID first." });
+        return;
+      }
+      const path = pathTemplate.replace("{id}", encodeURIComponent(id));
+      return callApi(method, path, payloadId);
+    }
+  </script>
+</body>
+</html>
