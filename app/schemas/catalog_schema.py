@@ -15,8 +15,14 @@ class BannerResponse(BaseModel):
 
 class ProductSummaryResponse(BaseModel):
     id: uuid.UUID
+    name: str
+    image_url: str | None
+    base_price: float
+    currency: str
+    sku: str | None
+    color: str | None
+    status: str | None
     category_id: uuid.UUID | None
-    name: str | None
 
 
 class HomePageResponse(BaseModel):

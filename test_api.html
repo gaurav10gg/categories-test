@@ -112,6 +112,14 @@
           <label for="categoryId">Category ID (for update/status/sort)</label>
           <input id="categoryId" placeholder="uuid" />
         </div>
+        <div>
+          <label for="productCategoryId">Product Category ID (optional, for /products)</label>
+          <input id="productCategoryId" placeholder="uuid" />
+        </div>
+        <div>
+          <label for="productSortBy">Product Sort By (price_asc, price_desc, newest)</label>
+          <input id="productSortBy" value="newest" />
+        </div>
       </div>
     </div>
 
@@ -192,6 +200,10 @@
           <div class="method">GET /catalog/promotional-banners?limit=10</div>
           <button onclick="callApi('GET','/catalog/promotional-banners?limit=10')">Get Banners</button>
         </div>
+        <div class="endpoint">
+          <div class="method">GET /products?category_id=&sort_by=&limit=20&offset=0</div>
+          <button onclick="callProductsApi()">Get Products</button>
+        </div>
       </div>
     </div>
 
@@ -246,6 +258,19 @@
       }
       const path = pathTemplate.replace("{id}", encodeURIComponent(id));
       return callApi(method, path, payloadId);
+    }
+
+    function callProductsApi() {
+      const categoryId = document.getElementById("productCategoryId").value.trim();
+      const sortBy = document.getElementById("productSortBy").value.trim() || "newest";
+      const params = new URLSearchParams();
+      if (categoryId) {
+        params.set("category_id", categoryId);
+      }
+      params.set("sort_by", sortBy);
+      params.set("limit", "20");
+      params.set("offset", "0");
+      return callApi("GET", `/products?${params.toString()}`);
     }
   </script>
 </body>

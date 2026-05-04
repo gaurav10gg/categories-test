@@ -44,8 +44,14 @@ class CatalogService:
         return [
             ProductSummaryResponse(
                 id=product.id,
-                category_id=product.category_id,
                 name=product.name,
+                image_url=product.image_url,
+                base_price=product.base_price,
+                currency=product.currency,
+                sku=product.sku,
+                color=product.color,
+                status=product.status,
+                category_id=product.category_id,
             )
             for product in ordered
         ]
