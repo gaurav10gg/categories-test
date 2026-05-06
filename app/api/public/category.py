@@ -1,8 +1,10 @@
+import uuid
+
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db.session import get_db_session
-from app.schemas.category_schema import CategoryDropdownItem, CategoryResponse
+from app.schemas.category_schema import CategoryDropdownItem, CategoryResponse, SubcategoryResponse
 from app.services.category_service import CategoryService
 
 router = APIRouter()
@@ -31,3 +33,12 @@ async def get_category_dropdown(
     service = CategoryService(db)
     categories = await service.get_active_categories()
     return [CategoryDropdownItem(id=item.category_id, label=item.name) for item in categories]
+
+
+@router.get("/{category_id}/subcategories", response_model=list[SubcategoryResponse])
+async def get_active_subcategories(
+    category_id: uuid.UUID,
+    db: AsyncSession = Depends(get_db_session),
+) -> list[SubcategoryResponse]:
+    service = CategoryService(db)
+    return await service.get_active_subcategories(category_id)

@@ -42,3 +42,15 @@ class CategoryResponse(BaseModel):
 class CategoryDropdownItem(BaseModel):
     id: uuid.UUID
     label: str
+
+
+class SubcategoryResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    subcategory_id: uuid.UUID
+    category_id: uuid.UUID
+    name: str
+    is_active: bool
+    sort_order: int
+    created_at: datetime
+    updated_at: datetime

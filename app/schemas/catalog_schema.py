@@ -23,6 +23,7 @@ class ProductSummaryResponse(BaseModel):
     color: str | None
     status: str | None
     category_id: uuid.UUID | None
+    subcategory_id: uuid.UUID | None
 
 
 class HomePageResponse(BaseModel):

@@ -52,6 +52,7 @@ class CatalogService:
                 color=product.color,
                 status=product.status,
                 category_id=product.category_id,
+                subcategory_id=product.subcategory_id,
             )
             for product in ordered
         ]

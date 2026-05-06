@@ -5,6 +5,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.category_model import Category
+from app.models.subcategory_model import Subcategory
 from app.schemas.category_schema import CategoryCreateRequest, CategoryUpdateRequest
 
 
@@ -70,6 +71,17 @@ class CategoryService:
                 Category.is_featured.is_(True),
             )
             .order_by(Category.sort_order.asc(), Category.name.asc())
+        )
+        return list(result.scalars().all())
+
+    async def get_active_subcategories(self, category_id: uuid.UUID) -> list[Subcategory]:
+        result = await self.db.execute(
+            select(Subcategory)
+            .where(
+                Subcategory.category_id == category_id,
+                Subcategory.is_active.is_(True),
+            )
+            .order_by(Subcategory.sort_order.asc(), Subcategory.name.asc())
         )
         return list(result.scalars().all())
 

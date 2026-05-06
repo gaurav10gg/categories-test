@@ -15,6 +15,7 @@ class ProductService:
     async def list_products(
         self,
         category_id: uuid.UUID | None = None,
+        subcategory_id: uuid.UUID | None = None,
         sort_by: Literal["price_asc", "price_desc", "newest"] = "newest",
         limit: int = 20,
         offset: int = 0,
@@ -23,6 +24,8 @@ class ProductService:
 
         if category_id is not None:
             query = query.where(Product.category_id == category_id)
+        if subcategory_id is not None:
+            query = query.where(Product.subcategory_id == subcategory_id)
 
         if sort_by == "price_asc":
             query = query.order_by(Product.base_price.asc(), Product.created_at.desc())
@@ -46,6 +49,7 @@ class ProductService:
                 color=product.color,
                 status=product.status,
                 category_id=product.category_id,
+                subcategory_id=product.subcategory_id,
             )
             for product in products
         ]

@@ -28,6 +28,11 @@ class Product(Base):
         ForeignKey("categories.category_id", ondelete="SET NULL"),
         nullable=True,
     )
+    subcategory_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("subcategories.subcategory_id", ondelete="SET NULL"),
+        nullable=True,
+    )
     provider_id: Mapped[uuid.UUID | None] = mapped_column(UUID(as_uuid=True), nullable=True)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     status: Mapped[str | None] = mapped_column(Text, nullable=True, server_default="active")

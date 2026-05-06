@@ -14,6 +14,7 @@ router = APIRouter()
 @router.get("", response_model=list[ProductSummaryResponse])
 async def list_products(
     category_id: uuid.UUID | None = Query(default=None),
+    subcategory_id: uuid.UUID | None = Query(default=None),
     sort_by: Literal["price_asc", "price_desc", "newest"] = Query(default="newest"),
     limit: int = Query(default=20, ge=1, le=100),
     offset: int = Query(default=0, ge=0),
@@ -22,6 +23,7 @@ async def list_products(
     service = ProductService(db)
     return await service.list_products(
         category_id=category_id,
+        subcategory_id=subcategory_id,
         sort_by=sort_by,
         limit=limit,
         offset=offset,
